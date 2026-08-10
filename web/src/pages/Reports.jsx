@@ -8,56 +8,17 @@ import { formatCurrency, formatDate } from '../lib/utils'
 const TABS = ['Inventory', 'Sales', 'Delivery', 'Movement History']
 
 // Inventory Reports
-const INVENTORY_REPORTS = [
-  { label: 'Current Stock', items: [
-    { name: 'Red Roses', qty: 8, unit: 'stem', status: 'low_stock' },
-    { name: 'White Lilies', qty: 3, unit: 'stem', status: 'low_stock' },
-    { name: 'Pink Carnations', qty: 45, unit: 'stem', status: 'in_stock' },
-    { name: 'Purple Orchids', qty: 22, unit: 'stem', status: 'in_stock' },
-    { name: 'Sunflowers', qty: 0, unit: 'stem', status: 'out_of_stock' },
-  ]},
-]
+const INVENTORY_REPORTS = []
 
-const SALES_DAILY = [
-  { date: 'Jul 21', revenue: 12400, orders: 8 },
-  { date: 'Jul 22', revenue: 18200, orders: 11 },
-  { date: 'Jul 23', revenue: 9800, orders: 6 },
-  { date: 'Jul 24', revenue: 22100, orders: 14 },
-  { date: 'Jul 25', revenue: 31500, orders: 19 },
-  { date: 'Jul 26', revenue: 41200, orders: 25 },
-  { date: 'Jul 27', revenue: 18750, orders: 12 },
-]
+const SALES_DAILY = []
 
-const TOP_PRODUCTS = [
-  { name: 'Classic Red Bouquet', orders: 42, revenue: 58800 },
-  { name: 'Sunflower Sunshine', orders: 31, revenue: 37200 },
-  { name: 'Pastel Dream Mix', orders: 28, revenue: 50400 },
-  { name: 'Pink Garden Rose', orders: 25, revenue: 30000 },
-  { name: 'White Elegance', orders: 21, revenue: 42000 },
-]
+const TOP_PRODUCTS = []
 
-const OCCASIONS_DATA = [
-  { occasion: "Valentine's", orders: 45 },
-  { occasion: 'Birthday', orders: 38 },
-  { occasion: 'Anniversary', orders: 27 },
-  { occasion: 'Wedding', orders: 18 },
-  { occasion: 'Sympathy', orders: 12 },
-  { occasion: 'Graduation', orders: 9 },
-]
+const OCCASIONS_DATA = []
 
-const DELIVERY_STATS = [
-  { status: 'Delivered', count: 128, percent: 85 },
-  { status: 'Failed', count: 12, percent: 8 },
-  { status: 'Rescheduled', count: 10, percent: 7 },
-]
+const DELIVERY_STATS = []
 
-const MOVEMENT_HISTORY = [
-  { date: '2026-07-27 09:12', item: 'Red Roses', type: 'stock_in', qty: '+50', prev: 0, new: 50, reason: 'Supplier delivery', by: 'Admin', ref: null },
-  { date: '2026-07-27 10:05', item: 'White Lilies', type: 'stock_out', qty: '-8', prev: 11, new: 3, reason: 'Used for ORD-0241', by: 'Admin', ref: 'ORD-0241' },
-  { date: '2026-07-27 11:00', item: 'Sunflowers', type: 'damaged', qty: '-10', prev: 10, new: 0, reason: 'Damaged during delivery', by: 'Admin', ref: null },
-  { date: '2026-07-26 14:30', item: 'Baby\'s Breath', type: 'spoiled', qty: '-5', prev: 6, new: 1, reason: 'Past expiration date', by: 'Admin', ref: null },
-  { date: '2026-07-26 09:00', item: 'Pink Carnations', type: 'stock_in', qty: '+30', prev: 15, new: 45, reason: 'Restocked', by: 'Admin', ref: null },
-]
+const MOVEMENT_HISTORY = []
 
 const MOVEMENT_COLORS = {
   stock_in: '#16a34a',

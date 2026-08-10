@@ -7,57 +7,9 @@ import { useToast } from '../context/ToastContext'
 
 const DELIVERY_STATUSES = ['all', 'unscheduled', 'scheduled', 'assigned', 'preparing_for_dispatch', 'dispatched', 'out_for_delivery', 'delivered', 'delivery_failed', 'rescheduled']
 
-const MOCK_RIDERS = ['Juan dela Cruz', 'Miguel Santos', 'Carlo Reyes', 'Ben Torres']
+const RIDERS = []
 
-const MOCK_DELIVERIES = [
-  {
-    id: '1', order_number: 'ORD-0241', order_id: '1',
-    customer: 'Maria Santos', recipient: 'Maria Santos',
-    address: 'BGC, Taguig City, Metro Manila', delivery_instructions: 'Call upon arrival',
-    status: 'assigned', scheduled_date: '2026-07-28', scheduled_time: '10:00',
-    delivery_fee: 150, assigned_rider: 'Juan dela Cruz',
-    proof_of_delivery_url: null, created_at: new Date().toISOString(),
-    attempts: [],
-  },
-  {
-    id: '2', order_number: 'ORD-0240', order_id: '2',
-    customer: 'Jose Reyes', recipient: 'Anna Reyes',
-    address: 'Makati CBD, Makati City', delivery_instructions: '',
-    status: 'out_for_delivery', scheduled_date: '2026-07-27', scheduled_time: '11:30',
-    delivery_fee: 150, assigned_rider: 'Miguel Santos',
-    proof_of_delivery_url: null, created_at: new Date(Date.now() - 3600000).toISOString(),
-    attempts: [{ number: 1, status: 'in_progress', attempted_at: new Date().toISOString() }],
-  },
-  {
-    id: '3', order_number: 'ORD-0239', order_id: '3',
-    customer: 'Ana Cruz', recipient: 'Ana Cruz',
-    address: 'Mandaluyong City', delivery_instructions: 'Leave at gate',
-    status: 'scheduled', scheduled_date: '2026-07-27', scheduled_time: '14:00',
-    delivery_fee: 150, assigned_rider: null,
-    proof_of_delivery_url: null, created_at: new Date(Date.now() - 7200000).toISOString(),
-    attempts: [],
-  },
-  {
-    id: '4', order_number: 'ORD-0238', order_id: '4',
-    customer: 'Pedro Lim', recipient: 'Pedro Lim',
-    address: 'Quezon City', delivery_instructions: '',
-    status: 'delivered', scheduled_date: '2026-07-26', scheduled_time: '15:00',
-    delivery_fee: 200, assigned_rider: 'Carlo Reyes',
-    proof_of_delivery_url: 'https://example.com/proof.jpg', created_at: new Date(Date.now() - 86400000).toISOString(),
-    attempts: [{ number: 1, status: 'delivered', attempted_at: new Date(Date.now() - 3600000).toISOString() }],
-  },
-  {
-    id: '5', order_number: 'ORD-0235', order_id: '5',
-    customer: 'Lita Garcia', recipient: 'Lita Garcia',
-    address: 'Pasig City', delivery_instructions: '',
-    status: 'delivery_failed', scheduled_date: '2026-07-26', scheduled_time: '09:00',
-    delivery_fee: 150, assigned_rider: 'Ben Torres',
-    proof_of_delivery_url: null, created_at: new Date(Date.now() - 172800000).toISOString(),
-    attempts: [
-      { number: 1, status: 'failed', failed_reason: 'No one home', attempted_at: new Date(Date.now() - 86400000).toISOString() },
-    ],
-  },
-]
+const DELIVERIES = []
 
 const STATUS_GROUPS = {
   'Unscheduled': ['unscheduled'],
@@ -151,7 +103,7 @@ function DeliveryDetailModal({ isOpen, onClose, delivery }) {
             <label className="form-label">Assign Rider</label>
             <select className="form-select" value={rider} onChange={(e) => setRider(e.target.value)}>
               <option value="">— Unassigned —</option>
-              {MOCK_RIDERS.map((r) => <option key={r} value={r}>{r}</option>)}
+              {RIDERS.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
 
@@ -194,7 +146,7 @@ export default function Delivery() {
   const [selected, setSelected] = useState(null)
   const [activeGroup, setActiveGroup] = useState('In Progress')
 
-  const filtered = MOCK_DELIVERIES.filter((d) => {
+  const filtered = DELIVERIES.filter((d) => {
     const matchSearch = d.order_number.toLowerCase().includes(search.toLowerCase()) || d.recipient.toLowerCase().includes(search.toLowerCase())
     const matchStatus = statusFilter === 'all' || d.status === statusFilter
     return matchSearch && matchStatus
@@ -203,7 +155,7 @@ export default function Delivery() {
   const counts = Object.fromEntries(
     Object.entries(STATUS_GROUPS).map(([group, statuses]) => [
       group,
-      MOCK_DELIVERIES.filter((d) => statuses.includes(d.status)).length,
+      DELIVERIES.filter((d) => statuses.includes(d.status)).length,
     ])
   )
 
@@ -212,7 +164,7 @@ export default function Delivery() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Delivery Management</h1>
-          <p className="page-subtitle">{MOCK_DELIVERIES.length} total deliveries today</p>
+          <p className="page-subtitle">{DELIVERIES.length} total deliveries today</p>
         </div>
       </div>
 
@@ -231,7 +183,7 @@ export default function Delivery() {
         ))}
         <div className="stat-card" style={{ flex: '1 1 140px', cursor: 'pointer', border: statusFilter === 'all' ? '2px solid var(--color-rose)' : undefined }} onClick={() => { setStatusFilter('all'); setActiveGroup('') }}>
           <div className="stat-label">All</div>
-          <div className="stat-value">{MOCK_DELIVERIES.length}</div>
+          <div className="stat-value">{DELIVERIES.length}</div>
         </div>
       </div>
 

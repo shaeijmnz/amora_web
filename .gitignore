@@ -1,17 +1,30 @@
 .DS_Store
 *.local
+*.log
+
+# Env secrets
 .env
 .env.*
 !.env.example
+!**/.env.example
 
 node_modules/
 dist/
 dist-ssr/
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Laravel
+laravel/vendor/
+laravel/node_modules/
+laravel/.env
+laravel/.env.backup
+laravel/.env.production
+laravel/storage/*.key
+laravel/storage/pail
+laravel/storage/logs/*
+laravel/storage/framework/cache/data/*
+laravel/storage/framework/sessions/*
+laravel/storage/framework/views/*
+laravel/bootstrap/cache/*.php
+laravel/public/hot
+laravel/public/storage
+laravel/public/build

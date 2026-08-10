@@ -4,17 +4,7 @@ import { formatDateTime, capitalize } from '../lib/utils'
 
 const CATEGORIES = ['all', 'inventory', 'orders', 'custom_requests', 'deliveries', 'system']
 
-const MOCK_NOTIFICATIONS = [
-  { id: '1', category: 'inventory', title: 'Low Stock Alert', body: 'Red Roses has dropped below the minimum stock level (8 / 20 stems).', is_read: false, created_at: new Date().toISOString(), related_type: 'inventory_item', related_id: '1' },
-  { id: '2', category: 'inventory', title: 'Item Out of Stock', body: 'Sunflowers is now out of stock (0 stems).', is_read: false, created_at: new Date(Date.now() - 1800000).toISOString(), related_type: 'inventory_item', related_id: '3' },
-  { id: '3', category: 'orders', title: 'New Order Received', body: 'Order ORD-0241 from Maria Santos — ₱2,000.00', is_read: false, created_at: new Date(Date.now() - 3600000).toISOString(), related_type: 'order', related_id: '1' },
-  { id: '4', category: 'orders', title: 'Order Cancelled', body: 'Order ORD-0237 was cancelled by the customer.', is_read: true, created_at: new Date(Date.now() - 7200000).toISOString(), related_type: 'order', related_id: '5' },
-  { id: '5', category: 'custom_requests', title: 'New Custom Request', body: 'Ana Cruz submitted a custom arrangement request (REQ-003) for a Birthday bouquet.', is_read: false, created_at: new Date(Date.now() - 10800000).toISOString(), related_type: 'custom_request', related_id: '3' },
-  { id: '6', category: 'deliveries', title: 'Unassigned Delivery', body: 'Order ORD-0239 has a scheduled delivery but no assigned rider.', is_read: true, created_at: new Date(Date.now() - 14400000).toISOString(), related_type: 'delivery', related_id: '3' },
-  { id: '7', category: 'deliveries', title: 'Delivery Failed', body: 'Delivery for ORD-0235 failed — No one home. Consider rescheduling.', is_read: true, created_at: new Date(Date.now() - 86400000).toISOString(), related_type: 'delivery', related_id: '5' },
-  { id: '8', category: 'inventory', title: 'Nearing Expiration', body: 'White Lilies expire on Jul 29 — 2 days remaining.', is_read: false, created_at: new Date(Date.now() - 18000000).toISOString(), related_type: 'inventory_item', related_id: '2' },
-  { id: '9', category: 'system', title: 'System Update', body: 'Dashboard reports are now updated in real-time.', is_read: true, created_at: new Date(Date.now() - 172800000).toISOString(), related_type: null, related_id: null },
-]
+const NOTIFICATIONS = []
 
 const CAT_ICONS = {
   inventory: Flower2,
@@ -34,7 +24,7 @@ const CAT_COLORS = {
 
 export default function Notifications() {
   const [filter, setFilter] = useState('all')
-  const [notifs, setNotifs] = useState(MOCK_NOTIFICATIONS)
+  const [notifs, setNotifs] = useState(NOTIFICATIONS)
 
   const filtered = notifs.filter((n) => filter === 'all' || n.category === filter)
   const unreadCount = notifs.filter((n) => !n.is_read).length

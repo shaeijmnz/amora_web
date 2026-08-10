@@ -6,7 +6,7 @@ import { useToast } from '../context/ToastContext'
 
 const OCCASIONS = ['Birthday', 'Anniversary', 'Wedding', 'Graduation', "Valentine's Day", "Mother's Day", 'Sympathy', 'Congratulations', 'Get Well Soon', 'Thank You', 'Other']
 const COLORS = ['Red', 'Pink', 'White', 'Yellow', 'Purple', 'Orange', 'Blue', 'Mixed', 'Pastel', 'Custom']
-const MOCK_INVENTORY = ['Red Roses', 'White Lilies', 'Sunflowers', 'Pink Carnations', 'Baby\'s Breath', 'Floral Wire', 'Ribbon (Pink)', 'Oasis Foam']
+const INVENTORY_OPTIONS = []
 
 export default function ProductForm() {
   const navigate = useNavigate()
@@ -168,7 +168,7 @@ export default function ProductForm() {
                   <label className="form-label">Inventory Item</label>
                   <select className="form-select" value={newMaterial.item} onChange={(e) => setNewMaterial({ ...newMaterial, item: e.target.value })}>
                     <option value="">— Select item —</option>
-                    {MOCK_INVENTORY.map((item) => <option key={item} value={item}>{item}</option>)}
+                    {INVENTORY_OPTIONS.map((item) => <option key={item} value={item}>{item}</option>)}
                   </select>
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>

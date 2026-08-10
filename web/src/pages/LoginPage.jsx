@@ -408,22 +408,6 @@ export default function LoginPage() {
               </p>
             )}
           </div>
-
-          {/* Test credentials hint */}
-          <div style={{
-            marginTop: '2rem',
-            padding: '0.875rem 1rem',
-            background: '#fff8f0',
-            borderRadius: 12,
-            border: '1px solid #fde8cc',
-          }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
-              🧪 User Testing Note
-            </div>
-            <div style={{ fontSize: '0.78rem', color: '#b45309', lineHeight: 1.5 }}>
-              Create an account above with any email and password. The first account you create will be an <strong>admin</strong> by default.
-            </div>
-          </div>
         </div>
       </div>
 

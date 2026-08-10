@@ -6,50 +6,7 @@ import { formatDate, formatCurrency, capitalize } from '../lib/utils'
 import { useToast } from '../context/ToastContext'
 import { Modal } from '../components/Modal'
 
-const MOCK_REQUESTS = [
-  {
-    id: '1', request_number: 'REQ-001', customer: 'Maria Santos', occasion: "Valentine's Day",
-    preferred_flowers: 'Red roses, Baby\'s breath', preferred_colors: 'Red, White',
-    bouquet_size: 'Large', budget: 3000, personalized_message: 'Happy Valentines my love!',
-    requested_delivery_date: '2026-02-14', status: 'awaiting_customer_approval',
-    estimated_price: 2800, admin_notes: 'Can use white chrysanthemums as filler', created_at: '2026-07-25',
-  },
-  {
-    id: '2', request_number: 'REQ-002', customer: 'Jose Reyes', occasion: 'Wedding',
-    preferred_flowers: 'White lilies, Orchids', preferred_colors: 'White, Ivory',
-    bouquet_size: 'Extra Large', budget: 8000, personalized_message: '',
-    requested_delivery_date: '2026-09-20', status: 'under_review',
-    estimated_price: null, admin_notes: '', created_at: '2026-07-24',
-  },
-  {
-    id: '3', request_number: 'REQ-003', customer: 'Ana Cruz', occasion: 'Birthday',
-    preferred_flowers: 'Sunflowers, Daisies', preferred_colors: 'Yellow, Orange',
-    bouquet_size: 'Medium', budget: 1500, personalized_message: 'Happy 18th Birthday!',
-    requested_delivery_date: '2026-08-05', status: 'new',
-    estimated_price: null, admin_notes: '', created_at: '2026-07-26',
-  },
-  {
-    id: '4', request_number: 'REQ-004', customer: 'Pedro Lim', occasion: 'Anniversary',
-    preferred_flowers: 'Pink roses, Peonies', preferred_colors: 'Pink, Blush',
-    bouquet_size: 'Medium', budget: 2500, personalized_message: '10 years of love!',
-    requested_delivery_date: '2026-07-30', status: 'approved',
-    estimated_price: 2200, admin_notes: 'Peonies unavailable — using garden roses instead', created_at: '2026-07-22',
-  },
-  {
-    id: '5', request_number: 'REQ-005', customer: 'Rosa Dela Cruz', occasion: 'Sympathy',
-    preferred_flowers: 'White chrysanthemums', preferred_colors: 'White',
-    bouquet_size: 'Large', budget: 3500, personalized_message: 'With deepest condolences',
-    requested_delivery_date: '2026-07-28', status: 'in_preparation',
-    estimated_price: 3200, admin_notes: '', created_at: '2026-07-20',
-  },
-  {
-    id: '6', request_number: 'REQ-006', customer: 'Lita Garcia', occasion: 'Graduation',
-    preferred_flowers: 'Mixed seasonal', preferred_colors: 'Colorful',
-    bouquet_size: 'Small', budget: 1000, personalized_message: 'Congratulations Dr. Lita!',
-    requested_delivery_date: '2026-08-10', status: 'rejected',
-    estimated_price: null, admin_notes: 'Budget too low for requested arrangement', created_at: '2026-07-18',
-  },
-]
+const REQUESTS = []
 
 const REQUEST_STATUSES = ['all', 'new', 'under_review', 'awaiting_customer_approval', 'approved', 'in_preparation', 'completed', 'rejected', 'cancelled']
 
@@ -160,7 +117,7 @@ export default function CustomRequests() {
   const [selected, setSelected] = useState(null)
   const toast = useToast()
 
-  const filtered = MOCK_REQUESTS.filter((r) => {
+  const filtered = REQUESTS.filter((r) => {
     const matchSearch = r.customer.toLowerCase().includes(search.toLowerCase()) || r.request_number.toLowerCase().includes(search.toLowerCase())
     const matchStatus = statusFilter === 'all' || r.status === statusFilter
     return matchSearch && matchStatus
@@ -171,7 +128,7 @@ export default function CustomRequests() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Custom Arrangement Requests</h1>
-          <p className="page-subtitle">{MOCK_REQUESTS.length} total requests</p>
+          <p className="page-subtitle">{REQUESTS.length} total requests</p>
         </div>
       </div>
 

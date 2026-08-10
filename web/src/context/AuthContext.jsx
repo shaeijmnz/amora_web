@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { api, clearAdminSession, getAdminToken, saveAdminSession } from '../lib/api'
 
 const AuthContext = createContext(null)
 
@@ -9,86 +9,80 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      else setLoading(false)
-    })
+    function dropSession() {
+      clearAdminSession()
+      setUser(null)
+      setProfile(null)
+    }
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      else { setProfile(null); setLoading(false) }
-    })
+    async function boot() {
+      // Drop legacy local-only preview sessions (pre-Laravel admin API)
+      localStorage.removeItem('amora_local_admin')
 
-    return () => subscription.unsubscribe()
+      const token = getAdminToken()
+      if (!token) {
+        dropSession()
+        setLoading(false)
+        return
+      }
+      try {
+        const { user: me } = await api.adminMe()
+        setUser(me)
+        setProfile({ full_name: me.name, role: me.role })
+        saveAdminSession(token, me)
+      } catch {
+        // Invalid/expired token → force re-login so pages don't show empty live data
+        dropSession()
+      } finally {
+        setLoading(false)
+      }
+    }
+    boot()
+
+    window.addEventListener('amora-admin-auth-lost', dropSession)
+    return () => window.removeEventListener('amora-admin-auth-lost', dropSession)
   }, [])
 
-  async function fetchProfile(userId) {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      if (error) console.warn('[Amora] fetchProfile error:', error.message)
-      setProfile(data ?? null)
-    } catch (e) {
-      console.warn('[Amora] fetchProfile threw:', e.message)
-      setProfile(null)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   async function signInWithEmail(email, password) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      // Surface friendly messages
-      if (error.message.includes('Email not confirmed') || error.message.includes('email_not_confirmed')) {
-        throw new Error('EMAIL_NOT_CONFIRMED')
-      }
-      if (error.message.includes('Invalid login credentials')) {
-        throw new Error('Wrong email or password. Please try again.')
-      }
-      throw error
-    }
+    const data = await api.adminLogin(email, password)
+    saveAdminSession(data.token, data.user)
+    setUser(data.user)
+    setProfile({ full_name: data.user.name, role: data.user.role })
     return data
   }
 
-  async function signUpWithEmail(email, password, fullName) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } },
-    })
-    if (error) throw error
-    return data
+  async function signUpWithEmail() {
+    throw new Error('Admin accounts are created by the team. Use admin login.')
   }
 
-  async function resendConfirmation(email) {
-    const { error } = await supabase.auth.resend({ type: 'signup', email })
-    if (error) throw error
-  }
+  async function resendConfirmation() {}
 
   async function signOut() {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    try {
+      await api.adminLogout()
+    } catch {
+      // ignore
+    }
+    clearAdminSession()
+    setUser(null)
+    setProfile(null)
   }
 
-  async function resetPassword(email) {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    })
-    if (error) throw error
+  async function resetPassword() {
+    throw new Error('Ask your developer to reset admin password in Laravel.')
   }
 
   return (
     <AuthContext.Provider value={{
-      user, profile, loading,
-      signInWithEmail, signUpWithEmail, resendConfirmation, signOut, resetPassword,
+      user,
+      profile,
+      loading,
+      hasSupabase: false,
+      signInWithEmail,
+      signUpWithEmail,
+      resendConfirmation,
+      signOut,
+      resetPassword,
     }}>
       {children}
     </AuthContext.Provider>
