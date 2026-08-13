@@ -48,8 +48,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/customers', [AdminCustomerController::class, 'index']);
         Route::get('/customers/{user}', [AdminCustomerController::class, 'show']);
         Route::get('/products', [AdminProductController::class, 'index']);
-        Route::get('/products/{product}', [AdminProductController::class, 'show']);
+        Route::post('/products/upload-image', [AdminProductController::class, 'uploadImage']);
         Route::post('/products', [AdminProductController::class, 'store']);
+        Route::get('/products/{product}', [AdminProductController::class, 'show']);
+        Route::patch('/products/{product}', [AdminProductController::class, 'update']);
+        Route::post('/products/{product}/duplicate', [AdminProductController::class, 'duplicate']);
         Route::get('/orders', [AdminOrderController::class, 'index']);
         Route::get('/orders/{order}', [AdminOrderController::class, 'show']);
         Route::patch('/orders/{order}', [AdminOrderController::class, 'updateStatus']);

@@ -36,6 +36,14 @@ npm run dev -- --host 127.0.0.1 --port 5173
 
 Open: http://127.0.0.1:5173/login
 
+## Run Both Together
+
+From the repo root:
+
+```bash
+bash dev.sh
+```
+
 ## Notes
 
 - Do **not** commit `laravel/.env` or `web/.env` (secrets stay local).

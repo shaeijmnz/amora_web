@@ -26,18 +26,16 @@ export function getSavedAdminUser() {
   }
 }
 
-async function request(path, { method = 'GET', body, token } = {}) {
-  const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  }
+async function request(path, { method = 'GET', body, token, multipart = false } = {}) {
+  const headers = { Accept: 'application/json' }
+  if (!multipart) headers['Content-Type'] = 'application/json'
   const auth = token ?? getAdminToken()
   if (auth) headers.Authorization = `Bearer ${auth}`
 
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: multipart ? body : body ? JSON.stringify(body) : undefined,
   })
 
   const data = await res.json().catch(() => ({}))
@@ -62,7 +60,23 @@ export const api = {
   adminLogout: () => request('/admin/logout', { method: 'POST' }),
   dashboard: () => request('/admin/dashboard'),
   customers: () => request('/admin/customers'),
+
+  // Products
   products: () => request('/admin/products'),
+  getProduct: (id) => request(`/admin/products/${id}`),
+  createProduct: (data) => request('/admin/products', { method: 'POST', body: data }),
+  updateProduct: (id, data) => request(`/admin/products/${id}`, { method: 'PATCH', body: data }),
+  duplicateProduct: (id) => request(`/admin/products/${id}/duplicate`, { method: 'POST' }),
+  uploadImage: (file) => {
+    const formData = new FormData()
+    formData.append('image', file)
+    return request('/admin/products/upload-image', {
+      method: 'POST',
+      body: formData,
+      multipart: true,
+    })
+  },
+
   orders: (params = {}) => {
     const q = new URLSearchParams(params).toString()
     return request(`/admin/orders${q ? `?${q}` : ''}`)
