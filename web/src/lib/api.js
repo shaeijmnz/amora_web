@@ -53,6 +53,17 @@ async function request(path, { method = 'GET', body, token, multipart = false } 
   return data
 }
 
+export function mediaUrl(path) {
+  if (!path) return ''
+  const value = String(path).trim()
+  if (!value) return ''
+  if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+    return value
+  }
+  const origin = API_BASE.replace(/\/api\/?$/, '')
+  return value.startsWith('/') ? `${origin}${value}` : `${origin}/${value}`
+}
+
 export const api = {
   adminLogin: (email, password) =>
     request('/admin/login', { method: 'POST', body: { email, password } }),

@@ -1,7 +1,7 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import {
-  LayoutDashboard, Package, ShoppingBag, ClipboardList,
-  Truck, Users, BarChart2, Bell, Flower2, LogOut, Settings,
+  LayoutDashboard, Package, ShoppingBag,
+  Truck, Users, BarChart2, Bell, Flower2, LogOut,
   Sparkles,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
@@ -41,7 +41,6 @@ const NAV = [
 ]
 
 export default function Sidebar() {
-  const location = useLocation()
   const { user, profile, signOut } = useAuth()
   const toast = useToast()
 
@@ -50,7 +49,7 @@ export default function Sidebar() {
   const initials = getInitials(displayName)
 
   async function handleSignOut() {
-    try { await signOut() } catch (e) { toast.error('Sign out failed') }
+    try { await signOut() } catch { toast.error('Sign out failed') }
   }
 
   return (
@@ -76,7 +75,7 @@ export default function Sidebar() {
                 end={to === '/'}
                 className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
               >
-                <Icon className="nav-icon" size={18} />
+                <Icon className="nav-icon" size={17} />
                 {label}
                 {badge && <span className="nav-badge">{badge}</span>}
               </NavLink>
@@ -87,20 +86,63 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="sidebar-footer">
-        {/* User info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', padding: '0.5rem 0.25rem', marginBottom: '0.5rem' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.65rem',
+          padding: '0.6rem 0.5rem',
+          marginBottom: '0.375rem',
+          borderRadius: 10,
+          background: 'rgba(252,232,236,0.6)',
+          border: '1px solid rgba(255,255,255,0.7)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          boxShadow: '0 2px 8px rgba(192,96,112,0.07)',
+        }}>
           {avatarUrl ? (
-            <img src={avatarUrl} alt={displayName} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.15)', flexShrink: 0 }} />
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+            />
           ) : (
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#e8627a,#c94060)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>{initials}</div>
+            <div style={{
+              width: 32, height: 32,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #e8a0ae, #c06070)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.7rem', fontWeight: 700, color: '#fff',
+              flexShrink: 0,
+            }}>
+              {initials}
+            </div>
           )}
           <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'rgba(255,255,255,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName}</div>
-            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{profile?.role || 'admin'}</div>
+            <div style={{
+              fontSize: '0.78rem', fontWeight: 600,
+              color: 'var(--color-ink)',
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              {displayName}
+            </div>
+            <div style={{
+              fontSize: '0.62rem',
+              color: 'var(--color-rose)',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}>
+              {profile?.role || 'admin'}
+            </div>
           </div>
         </div>
-        <button className="nav-item" style={{ color: 'rgba(255,255,255,0.45)' }} onClick={handleSignOut}>
-          <LogOut size={16} style={{ opacity: 0.6 }} />
+
+        <button
+          className="nav-item"
+          style={{ fontSize: '0.82rem' }}
+          onClick={handleSignOut}
+        >
+          <LogOut size={15} style={{ opacity: 0.5 }} />
           Sign Out
         </button>
       </div>
