@@ -92,5 +92,11 @@ export const api = {
     const q = new URLSearchParams(params).toString()
     return request(`/admin/orders${q ? `?${q}` : ''}`)
   },
+  updateOrder: (id, data) => request(`/admin/orders/${id}`, { method: 'PATCH', body: data }),
+  deliveries: (params = {}) => {
+    const q = new URLSearchParams(params).toString()
+    return request(`/admin/deliveries${q ? `?${q}` : ''}`)
+  },
+  updateDelivery: (id, data) => request(`/admin/deliveries/${id}`, { method: 'PATCH', body: data }),
   inventory: () => request('/admin/inventory'),
 }
