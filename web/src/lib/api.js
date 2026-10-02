@@ -103,6 +103,10 @@ export const api = {
 
   reports: (range = 'week') => request(`/admin/reports?range=${encodeURIComponent(range)}`),
 
+  customRequests: () => request('/admin/custom-requests'),
+  updateCustomRequest: (id, data) =>
+    request(`/admin/custom-requests/${id}`, { method: 'PATCH', body: data }),
+
   notifications: (category = 'all') =>
     request(`/admin/notifications?category=${encodeURIComponent(category)}`),
   unreadNotifications: () => request('/admin/notifications/unread-count'),
