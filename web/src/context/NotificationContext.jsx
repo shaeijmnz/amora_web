@@ -1,0 +1,45 @@
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { api, getAdminToken } from '../lib/api'
+
+const NotificationContext = createContext({ unread: 0, refresh: () => {} })
+
+const POLL_MS = 15000
+
+export function NotificationProvider({ children }) {
+  const [unread, setUnread] = useState(0)
+
+  const refresh = useCallback(async () => {
+    if (!getAdminToken()) {
+      setUnread(0)
+      return
+    }
+    try {
+      const res = await api.unreadNotifications()
+      setUnread(res.unread_count ?? 0)
+    } catch {
+      // A failed poll should never interrupt the page the owner is on.
+    }
+  }, [])
+
+  useEffect(() => {
+    refresh()
+    const id = setInterval(refresh, POLL_MS)
+    // Catch up immediately when the owner comes back to the tab.
+    const onFocus = () => refresh()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      clearInterval(id)
+      window.removeEventListener('focus', onFocus)
+    }
+  }, [refresh])
+
+  return (
+    <NotificationContext.Provider value={{ unread, refresh }}>
+      {children}
+    </NotificationContext.Provider>
+  )
+}
+
+export function useNotifications() {
+  return useContext(NotificationContext)
+}

@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { Bell, Flower2, ShoppingBag, Truck, Settings, CheckCheck, X } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { Bell, Flower2, ShoppingBag, Truck, Settings, CheckCheck, X, RefreshCw } from 'lucide-react'
 import { formatDateTime, capitalize } from '../lib/utils'
+import { useToast } from '../context/ToastContext'
+import { useNotifications } from '../context/NotificationContext'
+import { api } from '../lib/api'
 
 const CATEGORIES = ['all', 'inventory', 'orders', 'custom_requests', 'deliveries', 'system']
-
-const NOTIFICATIONS = []
 
 const CAT_ICONS = {
   inventory: Flower2,
@@ -23,22 +24,68 @@ const CAT_COLORS = {
 }
 
 export default function Notifications() {
+  const toast = useToast()
+  const { refresh: refreshBadge } = useNotifications()
   const [filter, setFilter] = useState('all')
-  const [notifs, setNotifs] = useState(NOTIFICATIONS)
+  const [notifs, setNotifs] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await api.notifications('all')
+      setNotifs(res.data || [])
+      refreshBadge()
+    } catch (e) {
+      toast.error(e.message || 'Failed to load notifications')
+    } finally {
+      setLoading(false)
+    }
+  }, [refreshBadge, toast])
+
+  useEffect(() => {
+    load()
+    // New orders can land while the owner is staring at this page.
+    const id = setInterval(load, 20000)
+    return () => clearInterval(id)
+  }, [])
 
   const filtered = notifs.filter((n) => filter === 'all' || n.category === filter)
   const unreadCount = notifs.filter((n) => !n.is_read).length
 
-  function markRead(id) {
-    setNotifs((prev) => prev.map((n) => n.id === id ? { ...n, is_read: true } : n))
+  async function markRead(notif) {
+    if (notif.is_read) return
+    setNotifs((prev) => prev.map((n) => (n.id === notif.id ? { ...n, is_read: true } : n)))
+    try {
+      await api.markNotificationRead(notif.id)
+      refreshBadge()
+    } catch (e) {
+      toast.error(e.message || 'Could not mark as read')
+      load()
+    }
   }
 
-  function markAllRead() {
+  async function markAllRead() {
     setNotifs((prev) => prev.map((n) => ({ ...n, is_read: true })))
+    try {
+      await api.markAllNotificationsRead()
+      refreshBadge()
+      toast.success('All caught up')
+    } catch (e) {
+      toast.error(e.message || 'Could not mark all as read')
+      load()
+    }
   }
 
-  function dismiss(id) {
+  async function dismiss(id) {
     setNotifs((prev) => prev.filter((n) => n.id !== id))
+    try {
+      await api.dismissNotification(id)
+      refreshBadge()
+    } catch (e) {
+      toast.error(e.message || 'Could not dismiss')
+      load()
+    }
   }
 
   return (
@@ -47,20 +94,28 @@ export default function Notifications() {
         <div>
           <h1 className="page-title">Notifications</h1>
           <p className="page-subtitle">
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
+            {loading && notifs.length === 0
+              ? 'Loading…'
+              : unreadCount > 0
+                ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
+                : 'All caught up!'}
           </p>
         </div>
-        {unreadCount > 0 && (
-          <button className="btn btn-secondary" onClick={markAllRead}>
-            <CheckCheck size={16} /> Mark all as read
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className="btn btn-secondary" onClick={load} disabled={loading}>
+            <RefreshCw size={16} /> Refresh
           </button>
-        )}
+          {unreadCount > 0 && (
+            <button className="btn btn-secondary" onClick={markAllRead}>
+              <CheckCheck size={16} /> Mark all as read
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Category tabs */}
       <div className="tabs" style={{ marginBottom: '1.5rem' }}>
         {CATEGORIES.map((cat) => {
-          const count = cat === 'all' ? notifs.filter((n) => !n.is_read).length : notifs.filter((n) => n.category === cat && !n.is_read).length
+          const count = notifs.filter((n) => !n.is_read && (cat === 'all' || n.category === cat)).length
           return (
             <button key={cat} className={`tab ${filter === cat ? 'active' : ''}`} onClick={() => setFilter(cat)}>
               {cat === 'all' ? 'All' : capitalize(cat).replace('_', ' ')}
@@ -74,8 +129,12 @@ export default function Notifications() {
         {filtered.length === 0 && (
           <div className="empty-state card" style={{ padding: '4rem 2rem' }}>
             <div className="empty-state-icon"><Bell size={40} /></div>
-            <h3>No notifications</h3>
-            <p>You're all caught up in this category.</p>
+            <h3>{loading ? 'Loading notifications…' : 'No notifications'}</h3>
+            <p>
+              {loading
+                ? 'Checking for new activity.'
+                : 'New paid orders, parcel updates, and low stock alerts show up here.'}
+            </p>
           </div>
         )}
 
@@ -92,11 +151,11 @@ export default function Notifications() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '1rem',
-                cursor: 'pointer',
+                cursor: notif.is_read ? 'default' : 'pointer',
                 opacity: notif.is_read ? 0.7 : 1,
                 borderLeft: notif.is_read ? undefined : `4px solid ${color}`,
               }}
-              onClick={() => markRead(notif.id)}
+              onClick={() => markRead(notif)}
             >
               <div style={{
                 width: 40, height: 40, borderRadius: 12, flexShrink: 0,

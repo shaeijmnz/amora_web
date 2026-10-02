@@ -686,9 +686,9 @@ tbody tr:hover td {
 }
 
 .modal {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  /* The overlay's own backdrop-filter is the backdrop root, so a blur here has
+     nothing to sample and the page behind bleeds through the glass. Stay opaque. */
+  background: #fff8fa;
   border-radius: 22px;
   border: 1px solid var(--glass-border);
   box-shadow: 0 24px 80px rgba(45,26,32,0.2), 0 8px 24px rgba(192,96,112,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
@@ -831,6 +831,24 @@ tbody tr:hover td {
   background: var(--color-rose);
   border: 2px solid white;
   animation: pulseDot 2s ease-in-out infinite;
+}
+
+.notif-count {
+  position: absolute;
+  top: 1px; right: 0px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e8a0ae, #c06070);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(192,96,112,0.35);
+  animation: pulseBadge 2.5s ease-in-out infinite;
 }
 
 /* ── Avatar ──────────────────────────────────────────────────── */

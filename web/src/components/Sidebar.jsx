@@ -5,6 +5,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useNotifications } from '../context/NotificationContext'
 import { useToast } from '../context/ToastContext'
 import { getInitials } from '../lib/utils'
 
@@ -35,13 +36,14 @@ const NAV = [
     label: 'Insights',
     items: [
       { to: '/reports', icon: BarChart2, label: 'Reports' },
-      { to: '/notifications', icon: Bell, label: 'Notifications' },
+      { to: '/notifications', icon: Bell, label: 'Notifications', badgeKey: 'unread' },
     ],
   },
 ]
 
 export default function Sidebar() {
   const { user, profile, signOut } = useAuth()
+  const { unread } = useNotifications()
   const toast = useToast()
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Admin'
@@ -68,18 +70,21 @@ export default function Sidebar() {
         {NAV.map((section) => (
           <div key={section.label}>
             <div className="nav-section-label">{section.label}</div>
-            {section.items.map(({ to, icon: Icon, label, badge }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={to === '/'}
-                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-              >
-                <Icon className="nav-icon" size={17} />
-                {label}
-                {badge && <span className="nav-badge">{badge}</span>}
-              </NavLink>
-            ))}
+            {section.items.map(({ to, icon: Icon, label, badgeKey }) => {
+              const badge = badgeKey === 'unread' ? unread : null
+              return (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={to === '/'}
+                  className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                >
+                  <Icon className="nav-icon" size={17} />
+                  {label}
+                  {badge > 0 && <span className="nav-badge">{badge}</span>}
+                </NavLink>
+              )
+            })}
           </div>
         ))}
       </nav>
