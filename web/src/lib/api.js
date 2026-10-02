@@ -99,4 +99,14 @@ export const api = {
   },
   updateDelivery: (id, data) => request(`/admin/deliveries/${id}`, { method: 'PATCH', body: data }),
   inventory: () => request('/admin/inventory'),
+  updateInventory: (id, data) => request(`/admin/inventory/${id}`, { method: 'PATCH', body: data }),
+
+  reports: (range = 'week') => request(`/admin/reports?range=${encodeURIComponent(range)}`),
+
+  notifications: (category = 'all') =>
+    request(`/admin/notifications?category=${encodeURIComponent(category)}`),
+  unreadNotifications: () => request('/admin/notifications/unread-count'),
+  markNotificationRead: (id) => request(`/admin/notifications/${id}/read`, { method: 'PATCH' }),
+  markAllNotificationsRead: () => request('/admin/notifications/read-all', { method: 'POST' }),
+  dismissNotification: (id) => request(`/admin/notifications/${id}`, { method: 'DELETE' }),
 }
