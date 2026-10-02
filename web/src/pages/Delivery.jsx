@@ -18,13 +18,29 @@ const STATUS_GROUPS = {
   'Issues': ['delivery_failed', 'rescheduled'],
 }
 
+const formatTimeSlot = (raw) => {
+  if (!raw) return ''
+  const [h, m = '00'] = String(raw).split(':')
+  const hour = Number(h)
+  if (Number.isNaN(hour)) return raw
+  const suffix = hour >= 12 ? 'PM' : 'AM'
+  return `${hour % 12 === 0 ? 12 : hour % 12}:${String(m).padStart(2, '0')} ${suffix}`
+}
+
+/// The customer picks the slot at checkout; fall back to the delivery row for
+/// legacy orders created before scheduling moved to the mobile form.
+const formatSlot = (d) => {
+  const date = d?.requested_date || d?.scheduled_date
+  const time = d?.requested_time || d?.scheduled_time
+  if (!date) return 'No slot chosen'
+  return `${formatDate(date)}${time ? ` · ${formatTimeSlot(time)}` : ''}`
+}
+
 function DeliveryDetailModal({ isOpen, onClose, delivery, onSaved }) {
   const toast = useToast()
   const [status, setStatus] = useState(delivery?.status || '')
   const [rider, setRider] = useState(delivery?.assigned_rider || '')
   const [failedReason, setFailedReason] = useState(delivery?.failed_reason || '')
-  const [schedDate, setSchedDate] = useState(delivery?.scheduled_date || '')
-  const [schedTime, setSchedTime] = useState(delivery?.scheduled_time || '')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -32,8 +48,6 @@ function DeliveryDetailModal({ isOpen, onClose, delivery, onSaved }) {
     setStatus(delivery.status || '')
     setRider(delivery.assigned_rider || '')
     setFailedReason(delivery.failed_reason || '')
-    setSchedDate(delivery.scheduled_date || '')
-    setSchedTime(delivery.scheduled_time || '')
   }, [delivery])
 
   if (!delivery) return null
@@ -45,8 +59,6 @@ function DeliveryDetailModal({ isOpen, onClose, delivery, onSaved }) {
       await api.updateDelivery(delivery.id, {
         status,
         assigned_rider: rider || null,
-        scheduled_date: schedDate || null,
-        scheduled_time: schedTime || null,
         failed_reason: failedReason || null,
       })
       toast.success('Delivery updated')
@@ -94,15 +106,11 @@ function DeliveryDetailModal({ isOpen, onClose, delivery, onSaved }) {
           </div>
 
           <div>
-            <div className="text-xs text-muted font-semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.5rem' }}>Schedule</div>
-            <div className="grid-2">
-              <div className="form-group">
-                <label className="form-label">Date</label>
-                <input type="date" className="form-input" value={schedDate} onChange={(e) => setSchedDate(e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Time</label>
-                <input type="time" className="form-input" value={schedTime} onChange={(e) => setSchedTime(e.target.value)} />
+            <div className="text-xs text-muted font-semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.5rem' }}>Customer's Chosen Schedule</div>
+            <div style={{ background: '#fdf2f4', borderRadius: 10, padding: '0.75rem 0.875rem' }}>
+              <div className="font-semibold" style={{ fontSize: '0.95rem' }}>{formatSlot(delivery)}</div>
+              <div className="text-xs text-muted" style={{ marginTop: '0.3rem' }}>
+                Picked by the customer at checkout — not editable here.
               </div>
             </div>
           </div>
@@ -122,6 +130,8 @@ function DeliveryDetailModal({ isOpen, onClose, delivery, onSaved }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="text-xs text-muted font-semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>What You Manage</div>
+
           <div className="form-group">
             <label className="form-label">Assign Rider</label>
             <select className="form-select" value={rider} onChange={(e) => setRider(e.target.value)}>
@@ -194,7 +204,7 @@ export default function Delivery() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Delivery Management</h1>
-          <p className="page-subtitle">{deliveries.length} deliveries from paid orders</p>
+          <p className="page-subtitle">{deliveries.length} deliveries from paid orders • Customers pick the slot, you assign the rider and move the status</p>
         </div>
       </div>
 
@@ -235,7 +245,7 @@ export default function Delivery() {
                 <th>Recipient</th>
                 <th>Address</th>
                 <th>Rider</th>
-                <th>Scheduled</th>
+                <th>Customer Slot</th>
                 <th>Status</th>
                 <th>Attempts</th>
                 <th>Actions</th>
@@ -256,9 +266,7 @@ export default function Delivery() {
                       : <span className="text-xs" style={{ color: '#f59e0b', fontWeight: 600 }}>Unassigned</span>
                     }
                   </td>
-                  <td className="text-sm">
-                    {d.scheduled_date ? `${formatDate(d.scheduled_date)} ${d.scheduled_time || ''}`.trim() : '—'}
-                  </td>
+                  <td className="text-sm">{formatSlot(d)}</td>
                   <td><Badge value={d.status} /></td>
                   <td className="text-sm text-center">{(d.attempts || []).length || '—'}</td>
                   <td>
