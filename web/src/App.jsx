@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastProvider } from './context/ToastContext'
 import { AuthProvider } from './context/AuthContext'
+import { NotificationProvider } from './context/NotificationContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
@@ -26,36 +27,38 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/admin">
           <AuthProvider>
-            <Routes>
-              {/* Public */}
-              <Route path="/login" element={<LoginPage />} />
+            <NotificationProvider>
+              <Routes>
+                {/* Public */}
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* Protected: all dashboard routes */}
-              <Route
-                element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/new" element={<ProductForm />} />
-                <Route path="/products/:id" element={<ProductForm />} />
-                <Route path="/custom-requests" element={<CustomRequests />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/delivery" element={<Delivery />} />
-                <Route path="/customers" element={<Customers />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/notifications" element={<Notifications />} />
-              </Route>
+                {/* Protected: all dashboard routes */}
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/inventory" element={<Inventory />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/new" element={<ProductForm />} />
+                  <Route path="/products/:id" element={<ProductForm />} />
+                  <Route path="/custom-requests" element={<CustomRequests />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/delivery" element={<Delivery />} />
+                  <Route path="/customers" element={<Customers />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/notifications" element={<Notifications />} />
+                </Route>
 
-              {/* Fallback */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </NotificationProvider>
           </AuthProvider>
         </BrowserRouter>
       </ToastProvider>
