@@ -55,11 +55,8 @@ export default function Welcome() {
         <p style={{ margin: '2px 0 0', fontSize: '1.35rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
           Florals
         </p>
-        <p style={{ margin: '4px 0 0', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 700, color: '#9a7f82' }}>
+        <p style={{ margin: '4px 0 16px', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 700, color: '#9a7f82' }}>
           Admin
-        </p>
-        <p style={{ margin: '10px 0 16px', lineHeight: 1.4, fontSize: '1rem' }}>
-          A flower shop in Quezon City.
         </p>
         <div className="card" style={{ textAlign: 'left' }}>
           <div className="card-body" style={{ padding: '0.35rem 1rem' }}>
