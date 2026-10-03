@@ -141,6 +141,16 @@ export default function LoginPage() {
         borderLeft: '1px solid rgba(255,255,255,0.7)',
       }}>
         <div style={{ width: '100%', maxWidth: 420, animation: 'slideUp 0.35s ease' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/welcome')}
+            style={{
+              background: 'none', border: 'none', padding: 0, marginBottom: '1rem',
+              color: '#c97b85', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem',
+            }}
+          >
+            ← Back to Amora
+          </button>
           <div style={{ marginBottom: '2.25rem' }}>
             <h2 style={{
               fontFamily: "'Playfair Display', serif",

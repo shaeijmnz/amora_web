@@ -6,6 +6,7 @@ import { NotificationProvider } from './context/NotificationContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import LoginPage from './pages/LoginPage'
+import Welcome from './pages/Welcome'
 import Dashboard from './pages/Dashboard'
 import Inventory from './pages/Inventory'
 import Products from './pages/Products'
@@ -33,6 +34,7 @@ export default function App() {
             <NotificationProvider>
               <Routes>
                 {/* Public */}
+                <Route path="/welcome" element={<Welcome />} />
                 <Route path="/login" element={<LoginPage />} />
 
                 {/* Protected: all dashboard routes */}
