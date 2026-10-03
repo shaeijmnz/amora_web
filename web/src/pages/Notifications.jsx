@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Bell, Flower2, ShoppingBag, Truck, Settings, CheckCheck, X, RefreshCw } from 'lucide-react'
+import { Bell, Flower2, ShoppingBag, Truck, Settings, CheckCheck, X, RefreshCw, MessageCircle } from 'lucide-react'
 import { formatDateTime, capitalize } from '../lib/utils'
 import { useToast } from '../context/ToastContext'
 import { useNotifications } from '../context/NotificationContext'
 import { api } from '../lib/api'
 
-const CATEGORIES = ['all', 'inventory', 'orders', 'custom_requests', 'deliveries', 'system']
+const CATEGORIES = ['all', 'inventory', 'orders', 'messages', 'custom_requests', 'deliveries', 'system']
 
 const CAT_ICONS = {
   inventory: Flower2,
   orders: ShoppingBag,
   custom_requests: Bell,
+  messages: MessageCircle,
   deliveries: Truck,
   system: Settings,
 }
@@ -19,6 +20,7 @@ const CAT_COLORS = {
   inventory: '#7aab8a',
   orders: '#8b5cf6',
   custom_requests: '#e8627a',
+  messages: '#c06070',
   deliveries: '#3b82f6',
   system: '#6b7280',
 }

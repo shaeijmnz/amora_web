@@ -107,6 +107,11 @@ export const api = {
   updateCustomRequest: (id, data) =>
     request(`/admin/custom-requests/${id}`, { method: 'PATCH', body: data }),
 
+  messages: () => request('/admin/messages'),
+  unreadMessages: () => request('/admin/messages/unread-count'),
+  getMessageThread: (id) => request(`/admin/messages/${id}`),
+  replyToMessage: (id, body) => request(`/admin/messages/${id}`, { method: 'POST', body: { body } }),
+
   notifications: (category = 'all') =>
     request(`/admin/notifications?category=${encodeURIComponent(category)}`),
   unreadNotifications: () => request('/admin/notifications/unread-count'),

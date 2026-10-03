@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, ShoppingBag,
   Truck, Users, BarChart2, Bell, Flower2, LogOut,
-  Sparkles,
+  Sparkles, MessageCircle,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useNotifications } from '../context/NotificationContext'
@@ -30,6 +30,7 @@ const NAV = [
     label: 'People',
     items: [
       { to: '/customers', icon: Users, label: 'Customers' },
+      { to: '/messages', icon: MessageCircle, label: 'Messages', badgeKey: 'messages' },
     ],
   },
   {
@@ -43,7 +44,7 @@ const NAV = [
 
 export default function Sidebar() {
   const { user, profile, signOut } = useAuth()
-  const { unread } = useNotifications()
+  const { unread, messageUnread } = useNotifications()
   const toast = useToast()
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Admin'
@@ -71,7 +72,7 @@ export default function Sidebar() {
           <div key={section.label}>
             <div className="nav-section-label">{section.label}</div>
             {section.items.map(({ to, icon: Icon, label, badgeKey }) => {
-              const badge = badgeKey === 'unread' ? unread : null
+              const badge = badgeKey === 'unread' ? unread : badgeKey === 'messages' ? messageUnread : null
               return (
                 <NavLink
                   key={to}

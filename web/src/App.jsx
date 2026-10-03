@@ -16,6 +16,7 @@ import Delivery from './pages/Delivery'
 import Customers from './pages/Customers'
 import Reports from './pages/Reports'
 import Notifications from './pages/Notifications'
+import Messages from './pages/Messages'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +52,7 @@ export default function App() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/delivery" element={<Delivery />} />
                   <Route path="/customers" element={<Customers />} />
+                  <Route path="/messages" element={<Messages />} />
                   <Route path="/reports" element={<Reports />} />
                   <Route path="/notifications" element={<Notifications />} />
                 </Route>
