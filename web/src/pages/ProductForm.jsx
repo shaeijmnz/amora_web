@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Plus, X, ArrowLeft, Image } from 'lucide-react'
 import { formatCurrency } from '../lib/utils'
 import { useToast } from '../context/ToastContext'
+import { api, mediaUrl } from '../lib/api'
 
 const OCCASIONS = ['Birthday', 'Anniversary', 'Wedding', 'Graduation', "Valentine's Day", "Mother's Day", 'Sympathy', 'Congratulations', 'Get Well Soon', 'Thank You', 'Other']
 const COLORS = ['Red', 'Pink', 'White', 'Yellow', 'Purple', 'Orange', 'Blue', 'Mixed', 'Pastel', 'Custom']
@@ -15,23 +16,57 @@ export default function ProductForm() {
   const isEdit = !!id && id !== 'new'
 
   const [form, setForm] = useState({
-    name: isEdit ? 'Classic Red Bouquet' : '',
-    description: isEdit ? 'A timeless arrangement of fresh red roses.' : '',
-    preparation_time_minutes: isEdit ? 60 : '',
+    name: '',
+    description: '',
+    preparation_time_minutes: '',
     is_available: true,
-    is_featured: isEdit ? true : false,
-    occasions: isEdit ? ["Valentine's Day", 'Anniversary'] : [],
-    colors: isEdit ? ['Red', 'White'] : [],
-    sizes: isEdit ? [
-      { label: 'Small', price: 850 },
-      { label: 'Medium', price: 1400 },
-      { label: 'Large', price: 2100 },
-    ] : [{ label: 'Standard', price: '' }],
-    required_materials: isEdit ? [{ item: 'Red Roses', quantity: 12 }] : [],
+    is_featured: false,
+    occasions: [],
+    colors: [],
+    sizes: [],
+    required_materials: [],
   })
+
+  const [images, setImages] = useState([])
+  const [loadingProduct, setLoadingProduct] = useState(isEdit)
+  const [uploading, setUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const fileRef = useRef(null)
 
   const [newSize, setNewSize] = useState({ label: '', price: '' })
   const [newMaterial, setNewMaterial] = useState({ item: '', quantity: '' })
+
+  useEffect(() => {
+    if (!isEdit) return
+    let cancelled = false
+    api.getProduct(id)
+      .then((res) => {
+        if (cancelled) return
+        const product = res.data || {}
+        const gallery = product.images?.length
+          ? product.images
+          : (product.primary_image_url ? [product.primary_image_url] : [])
+        setImages(gallery)
+        setForm({
+          name: product.name || '',
+          description: product.description || '',
+          preparation_time_minutes: product.preparation_time_minutes ?? '',
+          is_available: product.is_available !== false,
+          is_featured: !!product.is_featured,
+          occasions: product.occasions?.length ? product.occasions : (product.category ? [product.category] : []),
+          colors: [],
+          sizes: product.sizes?.length ? product.sizes.map((s) => ({ label: s.label, price: s.price })) : [],
+          required_materials: [],
+        })
+      })
+      .catch((err) => {
+        if (!cancelled) toast.error(err.message || 'Could not load this arrangement')
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingProduct(false)
+      })
+    return () => { cancelled = true }
+  }, [id, isEdit])
 
   function set(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -61,11 +96,58 @@ export default function ProductForm() {
     setNewMaterial({ item: '', quantity: '' })
   }
 
-  function handleSave() {
-    if (!form.name) return toast.error('Product name is required')
-    if (form.sizes.length === 0) return toast.error('Add at least one size/price')
-    toast.success(isEdit ? 'Product updated!' : 'Product created!')
-    navigate('/products')
+  async function handleUpload(event) {
+    const files = Array.from(event.target.files || [])
+    event.target.value = ''
+    if (!files.length) return
+    setUploading(true)
+    try {
+      const uploaded = []
+      for (const file of files) {
+        const res = await api.uploadImage(file)
+        if (!res.url) throw new Error('Upload did not return a photo URL')
+        uploaded.push(res.url)
+      }
+      setImages((prev) => [...prev, ...uploaded])
+      toast.success(uploaded.length > 1 ? 'Photos uploaded' : 'Photo uploaded')
+    } catch (err) {
+      toast.error(err.message || 'Could not upload the photo')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  async function handleSave() {
+    if (!form.name.trim()) return toast.error('Product name is required')
+    const sizes = form.sizes
+      .filter((s) => String(s.label || '').trim() && s.price !== '' && !Number.isNaN(Number(s.price)))
+      .map((s) => ({ label: String(s.label).trim(), price: Number(s.price) }))
+    if (sizes.length === 0) return toast.error('Add at least one size and price')
+    if (images.length === 0) return toast.error('Upload a photo so it shows on mobile')
+
+    const payload = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      category: form.occasions[0] || 'flower',
+      preparation_time_minutes: Number(form.preparation_time_minutes) || 45,
+      is_available: form.is_available,
+      is_featured: form.is_featured,
+      primary_image_url: images[0],
+      images,
+      sizes,
+    }
+
+    setSaving(true)
+    try {
+      if (isEdit) await api.updateProduct(id, payload)
+      else await api.createProduct(payload)
+      toast.success(isEdit ? 'Arrangement updated. It is on the mobile catalog.' : 'Arrangement saved. It is on the mobile catalog.')
+      navigate('/products')
+    } catch (err) {
+      toast.error(err.message || 'Could not save the arrangement')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -80,7 +162,9 @@ export default function ProductForm() {
         </div>
         <div className="flex gap-2">
           <button className="btn btn-secondary" onClick={() => navigate('/products')}>Discard</button>
-          <button className="btn btn-primary" onClick={handleSave}>Save Arrangement</button>
+          <button className="btn btn-primary" onClick={handleSave} disabled={saving || uploading || loadingProduct}>
+            {saving ? 'Saving…' : 'Save Arrangement'}
+          </button>
         </div>
       </div>
 
@@ -110,18 +194,44 @@ export default function ProductForm() {
           <div className="card">
             <div className="card-header"><h3 className="card-title">Product Images</h3></div>
             <div className="card-body">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                hidden
+                onChange={handleUpload}
+              />
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                {images.map((url, i) => (
+                  <div key={url} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden', background: 'var(--color-bg)' }}>
+                    <img src={mediaUrl(url)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    {i === 0 && (
+                      <span style={{ position: 'absolute', left: 6, bottom: 6, background: 'var(--color-rose)', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: 999 }}>Cover</span>
+                    )}
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-icon btn-sm"
+                      style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(255,255,255,0.9)' }}
+                      onClick={() => setImages((prev) => prev.filter((item) => item !== url))}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
                 <div style={{
                   aspectRatio: '1', background: 'var(--color-bg)', borderRadius: 12,
                   border: '2px dashed var(--color-border)', display: 'flex',
                   alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
                   flexDirection: 'column', gap: '0.5rem',
-                  gridColumn: '1 / -1', height: 160,
-                }} onClick={() => toast.info('Image upload will connect to Supabase Storage')}>
+                  gridColumn: images.length ? undefined : '1 / -1',
+                  height: images.length ? undefined : 160,
+                }} onClick={() => !uploading && fileRef.current?.click()}>
                   <Image size={28} style={{ color: 'var(--color-border)' }} />
-                  <span className="text-xs text-muted">Click to upload image</span>
+                  <span className="text-xs text-muted">{uploading ? 'Uploading…' : 'Click to upload image'}</span>
                 </div>
               </div>
+              <p className="text-xs text-muted" style={{ margin: '0.75rem 0 0' }}>JPG, PNG, or WebP. The first photo is the one buyers see on mobile.</p>
             </div>
           </div>
 
