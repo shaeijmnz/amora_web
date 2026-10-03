@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amora Florals — Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rose: #e8979e;
+      --rose-deep: #c97b85;
+      --blush: #f0c4c8;
+      --cream: #fbf6f3;
+      --terracotta: #c47a5a;
+      --ink: #4a3538;
+      --mist: #9a7f82;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: Quicksand, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #fbf6f3 0%, #f5e6e4 55%, #efd6d4 100%);
+    }
+    header, main { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0 8px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 20px; }
+    .mark {
+      width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff;
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    }
+    a.signin {
+      text-decoration: none; color: #fff; font-weight: 700; font-size: 14px;
+      background: linear-gradient(135deg, #e8979e, #c97b85 60%, #c47a5a);
+      border-radius: 999px; padding: 10px 18px;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: center;
+      padding: 28px 0 48px;
+    }
+    .eyebrow {
+      margin: 0 0 6px; letter-spacing: 0.16em; text-transform: uppercase;
+      font-size: 12px; font-weight: 700; color: var(--rose-deep);
+    }
+    h1 {
+      font-family: Allura, cursive; font-weight: 400; font-size: clamp(64px, 10vw, 92px);
+      line-height: 0.9; color: var(--rose-deep); margin: 0;
+    }
+    .florals { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 28px; margin-top: -4px; }
+    .sub { color: var(--mist); line-height: 1.6; max-width: 420px; }
+    .card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(240, 196, 200, 0.95);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 16px 40px rgba(201, 123, 133, 0.1);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .point {
+      display: flex; gap: 12px; align-items: flex-start; text-align: left;
+      background: var(--cream); border-radius: 16px; padding: 14px;
+    }
+    .point .icon {
+      width: 40px; height: 40px; border-radius: 50%; flex: none; display: grid; place-items: center;
+      background: var(--blush);
+    }
+    .point strong { display: block; font-size: 15px; }
+    .point span { display: block; color: var(--mist); font-size: 13px; line-height: 1.4; margin-top: 2px; }
+    a.dash {
+      height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      text-decoration: none; color: #fff; font-weight: 700;
+      background: linear-gradient(135deg, #e8979e, #c97b85 60%, #c47a5a);
+    }
+    @media (min-width: 860px) {
+      main { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="mark">✿</span> Amora Florals</div>
+    <a class="signin" href="/admin/login">Sign in</a>
+  </header>
+  <main>
+    <div>
+      <p class="eyebrow">Quezon City</p>
+      <h1>Amora</h1>
+      <div class="florals">Florals</div>
+      <p class="sub">Soft bouquets for delivery around the city. Customers order on the phone. The shop runs orders, stock, and messages from here.</p>
+    </div>
+    <div class="card">
+      <article class="point">
+        <div class="icon">✿</div>
+        <div>
+          <strong>Fresh arrangements</strong>
+          <span>Bouquets from the shop, ready for Quezon City.</span>
+        </div>
+      </article>
+      <article class="point">
+        <div class="icon">▦</div>
+        <div>
+          <strong>Customer picks the slot</strong>
+          <span>Date and time come from the order, not a guess.</span>
+        </div>
+      </article>
+      <article class="point">
+        <div class="icon">✉</div>
+        <div>
+          <strong>Messages</strong>
+          <span>Customer chats land here for the admin to answer.</span>
+        </div>
+      </article>
+      <a class="dash" href="/admin/login">Sign in to the dashboard</a>
+    </div>
+  </main>
+</body>
+</html>
