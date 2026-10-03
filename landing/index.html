@@ -12,7 +12,6 @@
       --ink: #4a3538;
       --rose: #c97b85;
       --muted: #9a7a82;
-      --border: #f0dde1;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
@@ -21,142 +20,132 @@
       color: var(--ink);
       background: linear-gradient(180deg, #fbf6f3 0%, #f5e6e4 55%, #efd6d4 100%);
     }
-    .page {
+    .wrap {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-    header, main { width: min(980px, calc(100% - 40px)); margin: 0 auto; }
-    header {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 22px 0 8px;
+      justify-content: center;
+      padding: 24px 20px;
     }
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .story {
+      width: min(420px, 100%);
+      text-align: center;
+    }
     .mark {
-      width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #fff; flex: none;
-      background: linear-gradient(135deg, #e8a0ae, #c06070);
-      box-shadow: 0 4px 16px rgba(192, 96, 112, 0.35);
-    }
-    .brand strong { display: block; font-family: "Playfair Display", serif; font-size: 17px; line-height: 1.1; }
-    .brand span { display: block; margin-top: 2px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-    a.signin, a.dash {
-      text-decoration: none; color: #fff; font-weight: 600; font-size: 14px;
-      background: linear-gradient(135deg, #d07080, #9a4858);
-      box-shadow: 0 4px 16px rgba(192, 96, 112, 0.35);
-    }
-    a.signin { border-radius: 10px; padding: 10px 18px; }
-    main {
-      flex: 1;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto;
+      border-radius: 50%;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      align-items: center;
-      padding: 12px 0 36px;
-    }
-    .eyebrow {
-      margin: 0 0 6px; letter-spacing: 0.16em; text-transform: uppercase;
-      font-size: 12px; font-weight: 700; color: var(--rose);
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, #e8979e, #c97b85 55%, #c47a5a);
+      box-shadow: 0 10px 24px rgba(201, 123, 133, 0.28);
+      font-size: 22px;
     }
     h1 {
-      font-family: "Playfair Display", serif; font-weight: 500;
-      font-size: clamp(48px, 10vw, 70px);
-      line-height: 0.92; color: var(--rose); margin: 0;
+      font-family: "Playfair Display", serif;
+      font-weight: 500;
+      font-size: clamp(52px, 10vw, 70px);
+      line-height: 0.92;
+      color: var(--rose);
+      margin: 8px 0 0;
     }
-    .florals { font-family: "Playfair Display", serif; font-style: italic; font-size: 22px; margin: 4px 0 10px; }
-    .lead { margin: 0 0 16px; line-height: 1.55; max-width: 420px; font-size: 16px; }
+    .florals {
+      font-family: "Playfair Display", serif;
+      font-style: italic;
+      font-size: 22px;
+      margin-top: 2px;
+    }
+    .role {
+      margin: 4px 0 0;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #9a7f82;
+    }
+    .lead {
+      margin: 10px 0 16px;
+      line-height: 1.4;
+      font-size: 16px;
+    }
     .card {
       background: rgba(255, 248, 250, 0.72);
       border: 1px solid rgba(255, 255, 255, 0.65);
       border-radius: 18px;
       box-shadow: 0 2px 8px rgba(192, 96, 112, 0.08);
+      padding: 6px 16px;
+      text-align: left;
     }
-    .card h2, .card h3 {
-      font-family: "Playfair Display", serif;
-      margin: 0;
-    }
-    .about { padding: 17px 20px; }
-    .about h2 { font-size: 20px; margin-bottom: 6px; }
-    .about p { margin: 0; line-height: 1.55; }
-    .desk-head {
-      padding: 18px 22px;
-      border-bottom: 1px solid rgba(240, 221, 225, 0.6);
-    }
-    .desk-head h3 { font-size: 15px; font-weight: 600; }
-    .desk { padding: 6px 22px 18px; }
     .point {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
     }
     .point .icon {
-      width: 40px; height: 40px; border-radius: 12px; flex: none; display: grid; place-items: center;
-      background: #f5e6e4; color: var(--rose); font-size: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      background: #f5e6e4;
+      color: var(--rose);
+      font-size: 15px;
     }
-    .point strong { display: block; font-size: 15px; }
-    .point span { display: block; color: var(--muted); font-size: 13px; line-height: 1.4; margin-top: 2px; }
-    a.dash {
-      height: 42px; border-radius: 10px; margin-top: 16px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    @media (min-width: 860px) {
-      main { grid-template-columns: 1.05fr 0.95fr; gap: 28px; padding-bottom: 28px; }
+    .point strong { display: block; font-size: 15px; line-height: 1.2; }
+    .point span { display: block; color: var(--muted); font-size: 13px; line-height: 1.3; margin-top: 2px; }
+    a.signin {
+      height: 48px;
+      margin-top: 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      background: linear-gradient(135deg, #d07080, #9a4858);
+      box-shadow: 0 4px 16px rgba(192, 96, 112, 0.35);
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="brand">
-        <span class="mark" aria-hidden="true">✿</span>
-        <div>
-          <strong>Amora Florals</strong>
-          <span>Admin</span>
-        </div>
+  <main class="wrap">
+    <section class="story">
+      <div class="mark" aria-hidden="true">✿</div>
+      <h1>Amora</h1>
+      <div class="florals">Florals</div>
+      <p class="role">Admin</p>
+      <p class="lead">A flower shop in Quezon City.</p>
+      <div class="card">
+        <article class="point">
+          <div class="icon">✿</div>
+          <div>
+            <strong>Orders</strong>
+            <span>Customers choose a bouquet and a delivery slot.</span>
+          </div>
+        </article>
+        <article class="point">
+          <div class="icon">▦</div>
+          <div>
+            <strong>Stock</strong>
+            <span>The counter watches what is ready to sell.</span>
+          </div>
+        </article>
+        <article class="point">
+          <div class="icon">✉</div>
+          <div>
+            <strong>Messages</strong>
+            <span>Replies stay in one thread with the shop.</span>
+          </div>
+        </article>
       </div>
       <a class="signin" href="/admin/login">Sign in</a>
-    </header>
-    <main>
-      <div>
-        <p class="eyebrow">Quezon City</p>
-        <h1>Amora</h1>
-        <div class="florals">Florals</div>
-        <p class="lead">Customers order bouquets, pick a delivery time, and message the shop.</p>
-        <div class="card about">
-          <h2>What this is</h2>
-          <p>Amora is the desk for this flower shop. People order on their phones. Here the shop runs orders, stock, and messages.</p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="desk-head"><h3>On the desk</h3></div>
-        <div class="desk">
-          <article class="point">
-            <div class="icon">✿</div>
-            <div>
-              <strong>Orders</strong>
-              <span>Customers choose a bouquet and a delivery slot.</span>
-            </div>
-          </article>
-          <article class="point">
-            <div class="icon">▦</div>
-            <div>
-              <strong>Stock</strong>
-              <span>The counter watches what is ready to sell.</span>
-            </div>
-          </article>
-          <article class="point">
-            <div class="icon">✉</div>
-            <div>
-              <strong>Messages</strong>
-              <span>Replies stay in one thread with the shop.</span>
-            </div>
-          </article>
-          <a class="dash" href="/admin/login">Sign in</a>
-        </div>
-      </div>
-    </main>
-  </div>
+    </section>
+  </main>
 </body>
 </html>

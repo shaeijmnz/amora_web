@@ -23,118 +23,75 @@ export default function Welcome() {
       background: 'linear-gradient(180deg, #fbf6f3 0%, #f5e6e4 55%, #efd6d4 100%)',
       color: '#4a3538',
       display: 'flex',
-      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px 20px',
     }}>
-      <header style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '1rem',
-        padding: '1.1rem 1.25rem',
-        maxWidth: 980,
-        width: '100%',
-        margin: '0 auto',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', minWidth: 0 }}>
-          <div style={{
-            width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: 'linear-gradient(135deg, #e8a0ae, #c06070)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', boxShadow: '0 4px 16px rgba(192,96,112,0.35)',
-          }}>
-            <Flower2 size={18} />
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, lineHeight: 1.1 }}>Amora Florals</div>
-            <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a7a82', fontWeight: 600 }}>Admin</div>
-          </div>
+      <main style={{ width: 'min(420px, 100%)', textAlign: 'center' }}>
+        <div style={{
+          width: 52,
+          height: 52,
+          borderRadius: '50%',
+          margin: '0 auto',
+          background: 'linear-gradient(135deg, #e8979e, #c97b85 55%, #c47a5a)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+          boxShadow: '0 10px 24px rgba(201,123,133,0.28)',
+        }}>
+          <Flower2 size={24} />
         </div>
-        <button className="btn btn-primary" type="button" onClick={() => navigate('/login')}>
-          Sign in
-        </button>
-      </header>
-
-      <main style={{
-        flex: 1,
-        width: '100%',
-        maxWidth: 980,
-        margin: '0 auto',
-        padding: '0.5rem 1.25rem 2rem',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '1.25rem',
-        alignItems: 'center',
-      }}>
-        <div>
-          <p style={{
-            margin: '0 0 0.35rem',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            color: '#c97b85',
-          }}>Quezon City</p>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(3rem, 6vw, 4.4rem)',
-            lineHeight: 0.92,
-            margin: 0,
-            color: '#c97b85',
-            fontWeight: 500,
-          }}>
-            Amora
-          </h1>
-          <p style={{ margin: '0.15rem 0 0.7rem', fontSize: '1.35rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
-            Florals
-          </p>
-          <p style={{ margin: '0 0 1rem', maxWidth: 420, lineHeight: 1.55, fontSize: '1.02rem' }}>
-            Customers order bouquets, pick a delivery time, and message the shop.
-          </p>
-          <div className="card">
-            <div className="card-body" style={{ padding: '1.05rem 1.2rem' }}>
-              <h2 style={{ margin: '0 0 0.4rem', fontSize: '1.25rem' }}>What this is</h2>
-              <p style={{ margin: 0, lineHeight: 1.55, color: '#4a3538' }}>
-                Amora is the desk for this flower shop. People order on their phones. Here the shop runs orders, stock, and messages.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title">On the desk</h3>
-          </div>
-          <div className="card-body" style={{ paddingTop: '0.35rem' }}>
+        <h1 style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'clamp(3.2rem, 8vw, 4.4rem)',
+          lineHeight: 0.92,
+          margin: '8px 0 0',
+          color: '#c97b85',
+          fontWeight: 500,
+        }}>
+          Amora
+        </h1>
+        <p style={{ margin: '2px 0 0', fontSize: '1.35rem', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}>
+          Florals
+        </p>
+        <p style={{ margin: '4px 0 0', fontSize: '0.72rem', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 700, color: '#9a7f82' }}>
+          Admin
+        </p>
+        <p style={{ margin: '10px 0 16px', lineHeight: 1.4, fontSize: '1rem' }}>
+          A flower shop in Quezon City.
+        </p>
+        <div className="card" style={{ textAlign: 'left' }}>
+          <div className="card-body" style={{ padding: '0.35rem 1rem' }}>
             {POINTS.map((point) => {
               const Icon = point.icon
               return (
                 <div key={point.title} style={{
                   display: 'flex',
-                  gap: '0.75rem',
-                  alignItems: 'flex-start',
-                  padding: '0.75rem 0',
-                  borderBottom: '1px solid var(--color-border)',
+                  gap: '0.7rem',
+                  alignItems: 'center',
+                  padding: '0.65rem 0',
                 }}>
-                  <div className="stat-icon" style={{ background: '#f5e6e4', color: '#c97b85', margin: 0 }}>
-                    <Icon size={18} />
+                  <div className="stat-icon" style={{ background: '#f5e6e4', color: '#c97b85', margin: 0, width: 32, height: 32 }}>
+                    <Icon size={16} />
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600 }}>{point.title}</div>
-                    <div className="text-muted" style={{ fontSize: '0.82rem', lineHeight: 1.4 }}>{point.text}</div>
+                    <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{point.title}</div>
+                    <div className="text-muted" style={{ fontSize: '0.8rem', lineHeight: 1.3 }}>{point.text}</div>
                   </div>
                 </div>
               )
             })}
-            <button
-              className="btn btn-primary"
-              type="button"
-              style={{ width: '100%', marginTop: '1rem', justifyContent: 'center' }}
-              onClick={() => navigate('/login')}
-            >
-              Sign in
-            </button>
           </div>
         </div>
+        <button
+          className="btn btn-primary"
+          type="button"
+          style={{ width: '100%', marginTop: '14px', justifyContent: 'center', height: 48 }}
+          onClick={() => navigate('/login')}
+        >
+          Sign in
+        </button>
       </main>
     </div>
   )
